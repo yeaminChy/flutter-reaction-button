@@ -21,6 +21,7 @@ class ReactionsBox<T> extends StatefulWidget {
     required this.onReactionSelected,
     required this.onClose,
     required this.animateBox,
+    this.borderColor,
     this.direction = ReactionsBoxAlignment.ltr,
   }) : assert(itemScale > 0.0 && itemScale < 1);
 
@@ -31,6 +32,8 @@ class ReactionsBox<T> extends StatefulWidget {
   final List<Reaction<T>?> reactions;
 
   final Color color;
+
+  final Color? borderColor;
 
   final double elevation;
 
@@ -188,6 +191,9 @@ class _ReactionsBoxState<T> extends State<ReactionsBox<T>>
           borderRadius: BorderRadius.circular(
             widget.radius,
           ),
+          side: widget.borderColor == null
+              ? BorderSide.none
+              : BorderSide(color: widget.borderColor!),
         ),
         child: Container(
           width: _boxWidth,

@@ -9,9 +9,11 @@ class ReactionButton<T> extends StatefulWidget {
     super.key,
     required this.onReactionChanged,
     required this.reactions,
+    this.onTap,
     this.placeholder,
     this.selectedReaction,
     this.boxColor = Colors.white,
+    this.borderColor,
     this.boxElevation = 5,
     this.boxRadius = 50,
     this.isChecked = false,
@@ -31,6 +33,9 @@ class ReactionButton<T> extends StatefulWidget {
   /// This triggers when reaction button value changed.
   final ValueChanged<Reaction<T>?> onReactionChanged;
 
+  /// This triggers when container area tapped.
+  final GestureTapCallback? onTap;
+
   /// Default widget if no reaction selected
   final Reaction<T>? placeholder;
 
@@ -41,6 +46,9 @@ class ReactionButton<T> extends StatefulWidget {
 
   /// Reactions box color [default = white]
   final Color boxColor;
+
+  /// Reactions box border color [default = null]
+  final Color? borderColor;
 
   /// Reactions box elevation [default = 5]
   final double boxElevation;
@@ -152,6 +160,16 @@ class _ReactionButtonState<T> extends State<ReactionButton<T>> {
     _overlayEntry = null;
   }
 
+  Offset? _getReactionBoxOffset() {
+    try {
+      RenderBox? box =
+      _globalKey.currentContext?.findRenderObject() as RenderBox?;
+      return box?.localToGlobal(const Offset(0, -8));
+    } catch (e) {
+      return null;
+    }
+  }
+
   @override
   void dispose() {
     _disposeOverlayEntry();
@@ -170,13 +188,16 @@ class _ReactionButtonState<T> extends State<ReactionButton<T>> {
         if (widget.toggle) {
           _onCheck();
         } else {
-          _onShowReactionsBox();
+          _onShowReactionsBox(_isContainer ? _getReactionBoxOffset() : null);
         }
       },
       onLongPressStart: (details) {
         if (widget.toggle) {
-          _onShowReactionsBox(_isContainer ? details.globalPosition : null);
+          _onShowReactionsBox(_isContainer ? _getReactionBoxOffset() : null);
         }
+      },
+      onTapDown: (details) {
+        widget.onTap?.call();
       },
       child: child,
     );
