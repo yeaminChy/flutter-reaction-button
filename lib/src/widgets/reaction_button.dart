@@ -139,6 +139,7 @@ class _ReactionButtonState<T> extends State<ReactionButton<T>> {
           itemScaleDuration: widget.itemAnimationDuration,
           animateBox: widget.animateBox,
           direction: widget.direction,
+          borderColor: widget.borderColor,
           onReactionSelected: (reaction) {
             _updateReaction(reaction);
             _disposeOverlayEntry();
